@@ -482,6 +482,8 @@ class Mesh
 {
 	friend class Renderer;
 
+	GLenum usage;
+
 	VertexArray vertexArray;
 	VertexBuffer buffPositions;
 	IndexBuffer indexBuffer;
@@ -492,7 +494,6 @@ class Mesh
 
 	unsigned int shader;
 
-	GLenum usage;
 
 	glm::vec3 location,
 			  rotation, // Euler angles
@@ -501,6 +502,8 @@ class Mesh
 	bool transformationHasChanged;
 
 	glm::mat4 transformationMatrix;
+
+	unsigned int id;
 
 	void buildTransformationMatrix()
 	{
@@ -519,14 +522,14 @@ class Mesh
 	}
 
 	public:
-	Mesh(GLenum argUsage) : 
+	Mesh() : 
 
-		buffPositions(argUsage),
-		indexBuffer(argUsage),
+		usage(GL_STATIC_DRAW),
+
+		buffPositions(usage),
+		indexBuffer(usage),
 
 		usesIndices(false),
-
-		usage(argUsage),
 
 		location(glm::vec3(0.0f)),
 		rotation(glm::vec3(0.0f)),
@@ -571,21 +574,48 @@ class Mesh
 	void setPosition(glm::vec3 argPosition)
 	{
 		this->location = argPosition;
+		transformationHasChanged = true;
+	}
+	void setPosition(float argPosX, float argPosY, float argPosZ)
+	{
+		this->location = {argPosX, argPosY, argPosZ};
+		transformationHasChanged = true;
 	}
 
 	void setRotation(glm::vec3 argRotation)
 	{	
 		this->rotation = argRotation;
+		transformationHasChanged = true;
+	}
+	void setRotation(float argRotX, float argRotY, float argRotZ)
+	{
+		this->rotation = {argRotX, argRotY, argRotZ};
+		transformationHasChanged = true;
 	}
 
 	void setScale(glm::vec3 argScale)
 	{
 		this->scale = argScale;
+		transformationHasChanged = true;
 	}
+	void setScale(float argScaleX, float argScaleY, float argScaleZ)
+	{
+		this->scale = {argScaleX, argScaleY, argScaleZ};
+		transformationHasChanged = true;
+	}
+};
+
+class Scene
+{
+	friend class Renderer;
+
+	std::vector<Mesh *> vecMeshes;
 };
 
 class Renderer
 {
+	glm::mat4 viewMatrix, projectionMatrix;
+
 	public:
 	void renderMesh(Mesh &mesh)
 	{
