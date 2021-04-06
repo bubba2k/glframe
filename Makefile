@@ -32,8 +32,8 @@ Util:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
 	
 gen-template:
-	cp $(BDIR)/libglframe.a ./template-project/libs
-	cp $(BDIR)/GLframe.hpp	./template-project/libs
+	cp $(BDIR)/libglframe.a ./template-project/libs/
+	cp $(BDIR)/GLframe.hpp	./template-project/libs/
 
 clean:
 	rm $(BDIR)/*.o
