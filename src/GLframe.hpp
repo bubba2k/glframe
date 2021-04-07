@@ -20,6 +20,14 @@
 
 #define DISPLAY_DEBUG_MODE 0x1
 
+class Camera
+{
+	public:
+	void setPosition(glm::vec3);
+	void setPosition(float, float, float);
+};
+extern Camera camera;
+
 float getTime();
 
 class Display

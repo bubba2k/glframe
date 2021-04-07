@@ -2,23 +2,8 @@
 
 
 Renderer::Renderer() :
-	viewHasChanged(true),
 	projectionHasChanged(true)
 {}
-
-glm::mat4 Renderer::viewMatrix()
-{
-	if(viewHasChanged)
-	{
-		m_viewMatrix = glm::lookAt(	glm::vec3(0.0f, 0.0f, 4.0f), 
-									glm::vec3(0.0f, 0.0f, 0.0f),
-									glm::vec3(0.0f, 1.0f, 0.0f)	);
-	
-		viewHasChanged = false;
-	}
-
-	return m_viewMatrix;
-}
 
 glm::mat4 Renderer::projectionMatrix()
 {
@@ -44,7 +29,7 @@ void Renderer::renderScene()
 			auto &mesh = **itMeshes;
 
 			// Create and send MVP Matrix
-			glm::mat4 mvpMatrix = projectionMatrix() * viewMatrix() *  mesh.transformationMatrix();
+			glm::mat4 mvpMatrix = this->projectionMatrix() * camera.viewMatrix() *  mesh.transformationMatrix();
 
 			mesh.vertexArray.bind();
 			glUseProgram(mesh.shaderID);
@@ -62,6 +47,39 @@ void Renderer::renderScene()
 			}
 		}
 	}
+}
+
+Camera::Camera() :
+	positionVector		(0.0f, 0.0f, 6.0f),
+	targetVector  		(0.0f, 0.0f, 0.0f),
+	orientationVector	(0.0f, 1.0f, 0.0f),
+	viewHasChanged(true)
+{}
+
+void Camera::setPosition(glm::vec3 argPosition)
+{
+	positionVector = argPosition;
+	viewHasChanged = true;
+}
+
+void Camera::setPosition(float x, float y, float z)
+{
+	positionVector = glm::vec3(x, y, z);
+	viewHasChanged = true;
+}
+
+glm::mat4 Camera::viewMatrix()
+{
+	if(viewHasChanged)
+	{
+		m_viewMatrix = glm::lookAt(	this->positionVector,
+									this->targetVector,
+									this->orientationVector );
+
+		viewHasChanged = false;
+	}
+
+	return m_viewMatrix;
 }
 
 template <class T>
@@ -86,3 +104,4 @@ template class Tracker<Mesh *>;
 // define MeshTracker and Renderer
 Tracker<Mesh *> MeshTracker = Tracker<Mesh *>();
 Renderer MeshRenderer = Renderer();
+Camera camera = Camera();

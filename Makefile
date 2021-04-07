@@ -5,7 +5,7 @@ CC 		= g++
 CFLAGS 	= -Wextra -Wall -g
 LIBS   	= -lSDL2 -lGL -lGLEW
 
-all: compile-all archive gen-template clean
+all: compile-all archive gen-template
 
 compile-all: Display Buffers Renderer Mesh Shader Util
 
