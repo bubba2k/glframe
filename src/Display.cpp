@@ -1,11 +1,14 @@
-#include "glframe.hpp"
+#include <GL/glew.h>
+
+#include "Display.hpp"
 #include "Renderer.hpp"
 
 static void DebugMessageCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
                             const GLchar *msg, const void *data);
 
-Display::Display(std::string title, int width, int height, int flags = 0)
+
+Display::Display(std::string title, int width, int height, int flags)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -49,6 +52,8 @@ Display::Display(std::string title, int width, int height, int flags = 0)
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(DebugMessageCallback, NULL);
 	}
+
+	MeshRenderer._aspectRatio = (float) width / (float) height;
 
 	closed = false;
 }

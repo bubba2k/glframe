@@ -2,7 +2,7 @@
 
 int main()
 {
-	Display display("Window", 800, 600);
+	Display display("Window", 1400, 200);
 
 	ShaderProgram shader({"vert.shader", "frag.shader"}, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER});
 

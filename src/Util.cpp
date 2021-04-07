@@ -1,4 +1,6 @@
-#include "glframe.hpp"
+#include "Util.hpp"
+
+#include <SDL2/SDL.h>
 
 float getTime()
 {

@@ -1,4 +1,9 @@
-#include "glframe.hpp"
+#include <GL/glew.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include "ShaderProgram.hpp"
 
 ShaderProgram::ShaderProgram(std::vector<std::string> vecFilenames, std::vector<GLuint> vecTypes)
 {
