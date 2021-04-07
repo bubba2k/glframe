@@ -29,7 +29,7 @@ class Display
 	bool closed;
 
 	public:
-	Display(std::string title, int width, int height, int flags);
+	Display(std::string title, int width, int height, int flags = 0);
 	~Display();
 
 	void update();
@@ -153,14 +153,6 @@ public:
 	void setScale(glm::vec3 argScale);
 	void setScale(float argX, float argY, float argZ);
 	void setScale(float argUniformScale);
-};
-
-class Renderer
-{
-	glm::mat4 viewMatrix, projectionMatrix;
-
-public:
-	void renderMesh(Mesh &mesh);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "glframe.hpp"
+#include "Renderer.hpp"
 
-void Mesh::buildTransformationMatrix()
+glm::mat4 Mesh::transformationMatrix()
 {
 	if(transformationHasChanged)
 	{
@@ -10,10 +11,12 @@ void Mesh::buildTransformationMatrix()
 		glm::quat rotationQuaternion(rotationVector);
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuaternion);
 
-		transformationMatrix = translationMatrix * rotationMatrix * scalingMatrix;
+		m_transformationMatrix = translationMatrix * rotationMatrix * scalingMatrix;
 
 		transformationHasChanged = false;
 	}
+
+	return m_transformationMatrix;
 }
 
 Mesh::Mesh(GLenum argUsage) :
@@ -32,6 +35,8 @@ Mesh::Mesh(GLenum argUsage) :
 		transformationHasChanged(true)
 
 {
+	ID = MeshTracker.track(this);
+
 	vertexArray.bind();
 	indexBuffer.bind();
 	buffPositions.bind();
@@ -81,11 +86,19 @@ void Mesh::setPosition(float argPosX, float argPosY, float argPosZ)
 void Mesh::setRotation(glm::vec3 argRotation)
 {	
 	rotationVector = argRotation;
+	for(int i = 0; i < rotationVector.length(); i++)
+	{
+		rotationVector[i] = glm::radians(rotationVector[i]);
+	}
 	transformationHasChanged = true;
 }
 void Mesh::setRotation(float argRotX, float argRotY, float argRotZ)
 {
 	rotationVector = {argRotX, argRotY, argRotZ};
+	for(int i = 0; i < rotationVector.length(); i++)
+	{
+		rotationVector[i] = glm::radians(rotationVector[i]);
+	}
 	transformationHasChanged = true;
 }
 
@@ -103,4 +116,9 @@ void Mesh::setScale(float argUniformScale)
 {
 	scalingVector = {argUniformScale, argUniformScale, argUniformScale};
 	transformationHasChanged = true;
+}
+
+Mesh::~Mesh()
+{
+	MeshTracker.forget(this->ID);
 }

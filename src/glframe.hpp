@@ -127,11 +127,11 @@ class Mesh
 
 	bool transformationHasChanged;
 
-	glm::mat4 transformationMatrix;
+	glm::mat4 m_transformationMatrix;
 
-	unsigned int ID;
+	int ID;
 
-	void buildTransformationMatrix();
+	glm::mat4 transformationMatrix();
 
 public:
 	Mesh(GLenum usage = GL_STATIC_DRAW);

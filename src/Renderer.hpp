@@ -3,12 +3,31 @@
 
 #include "glframe.hpp"
 
-class Renderer
+template <class T>
+class Tracker : public std::vector<T>
 {
-	glm::mat4 viewMatrix, projectionMatrix;
 
 public:
-	void renderMesh(Mesh &mesh);
+	int  track(T);
+	void forget(int);
 };
+
+class Renderer
+{
+	glm::mat4 m_viewMatrix, m_projectionMatrix;
+	bool viewHasChanged, projectionHasChanged;
+
+public:
+	Renderer();
+
+	glm::mat4 viewMatrix();
+	glm::mat4 projectionMatrix();
+
+	void renderScene();
+};
+
+
+extern Renderer MeshRenderer;
+extern Tracker<Mesh *> MeshTracker;
 
 #endif

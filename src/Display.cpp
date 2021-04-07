@@ -1,4 +1,5 @@
 #include "glframe.hpp"
+#include "Renderer.hpp"
 
 static void DebugMessageCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
@@ -40,6 +41,8 @@ Display::Display(std::string title, int width, int height, int flags = 0)
 	glewInit();
 
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	if(flags & DISPLAY_DEBUG_MODE)
 	{
@@ -59,6 +62,10 @@ Display::~Display()
 
 void Display::update()
 {
+	clear();
+
+	MeshRenderer.renderScene();
+
 	SDL_GL_SwapWindow(window);
 
 	SDL_Event e;
@@ -69,11 +76,12 @@ void Display::update()
 		else if(e.key.keysym.sym == SDLK_ESCAPE)
 			closed = true;
 	}
+
 }
 
 void Display::clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Display::setClearColor(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f)

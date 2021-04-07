@@ -2,13 +2,16 @@ BDIR 	= ./build
 SDIR 	= ./src
 
 CC 		= g++
-CFLAGS 	= -Wextra -Wall -fPIC
+CFLAGS 	= -Wextra -Wall -g
 LIBS   	= -lSDL2 -lGL -lGLEW
 
-all: Display Buffers Renderer Mesh Shader Util
+all: compile-all archive gen-template clean
 
-link:
-	$(CC) $(CFLAGS) -shared $(BDIR)/Display.o $(BDIR)/Buffers.o $(BDIR)/Renderer.o $(BDIR)/Mesh.o $(BDIR)/Shader.o $(BDIR)/Util.o -o $(BDIR)/glframe.so
+compile-all: Display Buffers Renderer Mesh Shader Util
+
+archive:
+	cp $(SDIR)/GLframe.hpp $(BDIR)/
+	ar rcs $(BDIR)/libglframe.a $(BDIR)/Display.o $(BDIR)/Buffers.o $(BDIR)/Renderer.o $(BDIR)/Mesh.o $(BDIR)/Shader.o $(BDIR)/Util.o
 
 Display:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
@@ -28,3 +31,9 @@ Shader:
 Util:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
 	
+gen-template:
+	cp $(BDIR)/libglframe.a ./template-project/libs
+	cp $(BDIR)/GLframe.hpp	./template-project/libs
+
+clean:
+	rm $(BDIR)/*.o
