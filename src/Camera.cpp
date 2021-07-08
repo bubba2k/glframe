@@ -2,12 +2,14 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-Camera::Camera() :
-	positionVector		(0.0f, 0.0f, 6.0f),
-	targetVector  		(0.0f, 0.0f, 0.0f),
-	orientationVector	(0.0f, 1.0f, 0.0f),
-	viewHasChanged(true)
-{}
+glm::vec3	positionVector		(0.0f, 0.0f, 6.0f),
+			targetVector  		(0.0f, 0.0f, 0.0f),
+			orientationVector	(0.0f, 1.0f, 0.0f);
+
+glm::mat4 _viewMatrix;
+
+bool		viewHasChanged(true);
+
 
 void Camera::setPosition(glm::vec3 argPosition)
 {
@@ -25,14 +27,12 @@ glm::mat4 Camera::viewMatrix()
 {
 	if(viewHasChanged)
 	{
-		m_viewMatrix = glm::lookAt(	this->positionVector,
-									this->targetVector,
-									this->orientationVector );
+		_viewMatrix = glm::lookAt(	positionVector,
+									targetVector,
+									orientationVector );
 
 		viewHasChanged = false;
 	}
 
-	return m_viewMatrix;
+	return _viewMatrix;
 }
-
-Camera camera;

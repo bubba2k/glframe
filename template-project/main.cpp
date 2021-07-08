@@ -56,7 +56,7 @@ int main()
 		mesh3.setPosition(0.0f, cos(getTime()*2.0f) * 3.0f, sin(getTime()*2.0f) * 2.0f);
 		mesh3.setRotation(getTime()*180.0f, 0, 0);
 
-		camera.setPosition(6.0f * cos(getTime()*0.1), 0, 6.0f * sin(getTime()*0.1));
+		Camera::setPosition(6.0f * cos(getTime()*0.1), 0, 6.0f * sin(getTime()*0.1));
 
 
 		display.update();

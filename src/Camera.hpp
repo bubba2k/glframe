@@ -4,24 +4,18 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
-class Camera
+namespace Camera
 {
-	friend class Renderer;
-
-	glm::vec3 positionVector, targetVector, orientationVector;
-	glm::mat4 m_viewMatrix;
-
-	glm::mat4 viewMatrix();
-	bool viewHasChanged;
-
-public:
-	Camera();
-
 	void setPosition(glm::vec3);
 	void setPosition(float, float, float);
 
+	// TODO: implement functions below
+	void offsetPosition(glm::vec3);
+	void offsetPosition(float, float, float);
+	void lookAt(glm::vec3);
+	void lookAt(float, float, float);
+	void rotate(float, float, float);
+	glm::mat4 viewMatrix();
 };
-
-extern Camera camera;
 
 #endif

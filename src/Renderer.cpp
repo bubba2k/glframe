@@ -30,7 +30,7 @@ void Renderer::renderScene()
 			auto &mesh = **itMeshes;
 
 			// Create and send MVP Matrix
-			glm::mat4 mvpMatrix = this->projectionMatrix() * camera.viewMatrix() *  mesh.transformationMatrix();
+			glm::mat4 mvpMatrix = this->projectionMatrix() * Camera::viewMatrix() *  mesh.transformationMatrix();
 
 			mesh.vertexArray.bind();
 			glUseProgram(mesh.shaderID);
