@@ -9,20 +9,19 @@ class Renderer
 {
 	friend class Display;
 
-	glm::mat4 m_viewMatrix, m_projectionMatrix;
-	bool viewHasChanged, projectionHasChanged;
-
-	float _aspectRatio;
-
-public:
 	Renderer();
 
-	glm::mat4 viewMatrix();
-	glm::mat4 projectionMatrix();
+	static float aspectRatio;
+	static glm::mat4 m_viewMatrix, m_projectionMatrix;
+	static bool viewHasChanged, projectionHasChanged;
 
-	void renderScene();
+public:
+	static bool init(float argAspectRatio);
+
+	static glm::mat4 viewMatrix();
+	static glm::mat4 projectionMatrix();
+
+	static void renderScene();
 };
-
-extern Renderer MeshRenderer;
 
 #endif

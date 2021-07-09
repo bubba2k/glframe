@@ -2,18 +2,27 @@
 #include "Mesh.hpp"
 #include "Camera.hpp"
 
-Renderer::Renderer() :
-	projectionHasChanged(true)
-{}
+float Renderer::aspectRatio;
+glm::mat4 Renderer::m_viewMatrix, Renderer::m_projectionMatrix;
+bool Renderer::viewHasChanged, Renderer::projectionHasChanged;
+
+bool Renderer::init(float argAspectRatio)
+{
+	aspectRatio = argAspectRatio;
+	projectionHasChanged = true;
+
+	return true;
+}
 
 glm::mat4 Renderer::projectionMatrix()
 {
 	if(projectionHasChanged)
 	{
-		m_projectionMatrix = glm::perspective(	glm::radians(60.0f),	// Vertical FOV
-												this->_aspectRatio,				// Aspect Ratio
-												0.01f,					// Near Clipping Plane
-												100.0f	);				// Far  Clipping Plane
+		m_projectionMatrix = glm::perspective(	
+					glm::radians(60.0f),	// Vertical FOV
+					aspectRatio,			// Aspect Ratio
+					0.01f,					// Near Clipping Plane
+					100.0f	);				// Far  Clipping Plane
 		projectionHasChanged = false;
 	}
 
@@ -30,17 +39,20 @@ void Renderer::renderScene()
 			auto &mesh = **itMeshes;
 
 			// Create and send MVP Matrix
-			glm::mat4 mvpMatrix = this->projectionMatrix() * Camera::viewMatrix() *  mesh.transformationMatrix();
+			glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
+				Camera::viewMatrix() *  mesh.transformationMatrix();
 
 			mesh.vertexArray.bind();
 			glUseProgram(mesh.shaderID);
 
-			int mvpMatrixLocation = glGetUniformLocation(mesh.shaderID, "mvpMatrix");
+			int mvpMatrixLocation = glGetUniformLocation(mesh.shaderID, 
+														 "mvpMatrix");
 			glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
 
 			if(mesh.usesIndices)
 			{
-				glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, mesh.vertexCount, 
+							   GL_UNSIGNED_INT, 0);
 			}	
 			else
 			{
@@ -49,5 +61,3 @@ void Renderer::renderScene()
 		}
 	}
 }
-
-Renderer MeshRenderer;

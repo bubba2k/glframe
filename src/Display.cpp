@@ -30,14 +30,17 @@ Display::Display(std::string title, int width, int height, int flags)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
 		
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 
+						SDL_GL_CONTEXT_PROFILE_CORE);
 
 	if(flags & DISPLAY_DEBUG_MODE)
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 
 	SDL_GL_SetSwapInterval(0);
 
-	window =  SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
+	window =  SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, 
+							   SDL_WINDOWPOS_CENTERED, width, height, 
+							   SDL_WINDOW_OPENGL);
 
 	gl_context = SDL_GL_CreateContext(window);
 
@@ -53,7 +56,9 @@ Display::Display(std::string title, int width, int height, int flags)
 		glDebugMessageCallback(DebugMessageCallback, NULL);
 	}
 
-	MeshRenderer._aspectRatio = (float) width / (float) height;
+	// Init the renderer
+	float aspectRatio = (float) width / (float) height;
+	Renderer::init(aspectRatio);
 
 	closed = false;
 }
@@ -69,7 +74,7 @@ void Display::update()
 {
 	clear();
 
-	MeshRenderer.renderScene();
+	Renderer::renderScene();
 
 	SDL_GL_SwapWindow(window);
 
