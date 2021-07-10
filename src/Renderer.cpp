@@ -31,33 +31,29 @@ glm::mat4 Renderer::projectionMatrix()
 
 void Renderer::renderScene()
 {
-	std::vector<Mesh *>::iterator itMeshes = MeshTracker.begin();
-	for( ; itMeshes < MeshTracker.end(); itMeshes++)
+	for(Mesh * meshPtr : Mesh::List)
 	{
-		if(*itMeshes != nullptr)
-		{
-			auto &mesh = **itMeshes;
+		auto &mesh = *meshPtr;
 
-			// Create and send MVP Matrix
-			glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
-				Camera::viewMatrix() *  mesh.transformationMatrix();
+		// Create and send MVP Matrix
+		glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
+			Camera::viewMatrix() *  mesh.transformationMatrix();
 
-			mesh.vertexArray.bind();
-			glUseProgram(mesh.shaderID);
+		mesh.vertexArray.bind();
+		glUseProgram(mesh.shaderID);
 
-			int mvpMatrixLocation = glGetUniformLocation(mesh.shaderID, 
+		int mvpMatrixLocation = glGetUniformLocation(mesh.shaderID, 
 														 "mvpMatrix");
-			glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
+		glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
 
-			if(mesh.usesIndices)
-			{
-				glDrawElements(GL_TRIANGLES, mesh.vertexCount, 
-							   GL_UNSIGNED_INT, 0);
-			}	
-			else
-			{
-				glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
-			}
+		if(mesh.usesIndices)
+		{
+			glDrawElements(GL_TRIANGLES, mesh.vertexCount, 
+						   GL_UNSIGNED_INT, 0);
+		}	
+		else
+		{
+			glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
 		}
 	}
 }

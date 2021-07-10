@@ -3,10 +3,13 @@
 
 #include "ShaderProgram.hpp"
 #include "Buffers.hpp"
-#include "Tracker.hpp"
+
+#include <list>
 
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/vector_float3.hpp>
+
+typedef int Mesh_ID;
 
 class Mesh
 {
@@ -36,6 +39,13 @@ class Mesh
 
 	glm::mat4 transformationMatrix();
 
+	// keep track of all Meshes
+	static std::list<Mesh *> List;
+	static Mesh_ID nextID;
+
+	static Mesh_ID track(Mesh *);
+	static bool forget(Mesh_ID);
+
 public:
 	Mesh(GLenum usage = GL_STATIC_DRAW);
 	~Mesh();
@@ -54,8 +64,10 @@ public:
 	void setScale(glm::vec3 argScale);
 	void setScale(float argX, float argY, float argZ);
 	void setScale(float argUniformScale);
-};
 
-extern Tracker<Mesh *> MeshTracker;
+	inline Mesh_ID getID() { return this->ID; }
+
+	static Mesh * get(Mesh_ID ID);	// search all Meshes by ID
+};
 
 #endif

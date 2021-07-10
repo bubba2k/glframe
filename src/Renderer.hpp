@@ -3,8 +3,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Tracker.hpp"
-
 class Renderer
 {
 	friend class Display;

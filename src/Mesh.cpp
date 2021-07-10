@@ -3,8 +3,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include "Mesh.hpp"
-
-Tracker<Mesh *> MeshTracker;
+#include <algorithm>
 
 glm::mat4 Mesh::transformationMatrix()
 {
@@ -40,7 +39,7 @@ Mesh::Mesh(GLenum argUsage) :
 		transformationHasChanged(true)
 
 {
-	ID = MeshTracker.track(this);
+	ID = track(this);
 
 	vertexArray.bind();
 	indexBuffer.bind();
@@ -52,9 +51,47 @@ Mesh::Mesh(GLenum argUsage) :
 	vertexArray.unbind();
 }
 
+Mesh_ID Mesh::nextID = 0;
+std::list<Mesh *> Mesh::List;
+
+Mesh_ID Mesh::track(Mesh *ptr)
+{
+	Mesh::List.push_front(ptr);
+
+	return nextID++;
+}
+
+bool Mesh::forget(Mesh_ID id)
+{
+	auto it = std::find_if(Mesh::List.begin(), Mesh::List.end(),
+			[=](Mesh *ptr)
+			{ return id == ptr->ID; });
+
+	if(it == Mesh::List.end())
+	{
+		return false;
+	}
+	else
+	{
+		Mesh::List.erase(it);
+		return true;
+	}
+}
+
+Mesh * Mesh::get(Mesh_ID id)
+{
+	auto it = std::find_if(Mesh::List.begin(), Mesh::List.end(),
+			[=](Mesh *ptr)
+			{ return id == ptr->ID; });
+
+	if(it == Mesh::List.end())
+		return nullptr;
+	else
+		return *it;
+}
+
 void Mesh::pushPositions(unsigned int count, float * values)
 {
-	
 	buffPositions.setData(count * 3 * sizeof(float), values);
 	
 	if(!usesIndices)
@@ -125,5 +162,5 @@ void Mesh::setScale(float argUniformScale)
 
 Mesh::~Mesh()
 {
-	MeshTracker.forget(this->ID);
+	forget(this->ID);
 }
