@@ -7,11 +7,11 @@ LIBS   	= -lSDL2 -lGL -lGLEW
 
 all: compile-all archive gen-template
 
-compile-all: Display Buffers Renderer Mesh Shader Util Camera
+compile-all: Display Buffers Renderer Mesh Shader Util Camera Entity Tracker
 
 archive:
 	cp $(SDIR)/*.hpp $(BDIR)/
-	ar rcs $(BDIR)/libglframe.a $(BDIR)/Display.o $(BDIR)/Buffers.o $(BDIR)/Renderer.o $(BDIR)/Mesh.o $(BDIR)/Shader.o $(BDIR)/Util.o $(BDIR)/Camera.o
+	ar rcs $(BDIR)/libglframe.a $(BDIR)/Display.o $(BDIR)/Buffers.o $(BDIR)/Renderer.o $(BDIR)/Mesh.o $(BDIR)/Shader.o $(BDIR)/Util.o $(BDIR)/Camera.o $(BDIR)/Entity.o $(BDIR)/Tracker.o
 
 Display:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
@@ -32,6 +32,12 @@ Util:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
 
 Camera:
+	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
+
+Entity:
+	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
+
+Tracker:
 	$(CC) $(CFLAGS) -c $(SDIR)/$@.cpp -o $(BDIR)/$@.o
 
 gen-template:

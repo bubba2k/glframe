@@ -13,5 +13,6 @@
 #include "Mesh.hpp"
 #include "ShaderProgram.hpp"
 #include "Util.hpp"
+#include "Entity.hpp"
 
 #endif

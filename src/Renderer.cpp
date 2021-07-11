@@ -1,6 +1,8 @@
+#include <iostream>
+
 #include "Renderer.hpp"
-#include "Mesh.hpp"
 #include "Camera.hpp"
+#include "Entity.hpp"
 
 float Renderer::aspectRatio;
 glm::mat4 Renderer::m_viewMatrix, Renderer::m_projectionMatrix;
@@ -31,29 +33,38 @@ glm::mat4 Renderer::projectionMatrix()
 
 void Renderer::renderScene()
 {
-	for(Mesh * meshPtr : Mesh::List)
+	for(Entity *entityPtr : Entity::entityTracker)
 	{
-		auto &mesh = *meshPtr;
+		entityPtr->meshPtr->vertexArray.bind();
+		glUseProgram(entityPtr->shaderID);
 
-		// Create and send MVP Matrix
-		glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
-			Camera::viewMatrix() *  mesh.transformationMatrix();
+		glm::mat4 entityTransformationMatrix = 
+			entityPtr->getTransformationMatrix();
 
-		mesh.vertexArray.bind();
-		glUseProgram(mesh.shaderID);
+		for(EntityInstance *instancePtr : entityPtr->instanceTracker)
+		{
+			// Create and send MVP Matrix
+			glm::mat4 combinedTransformationMatrix = 
+				instancePtr->getTransformationMatrix() * 
+				entityTransformationMatrix;
 
-		int mvpMatrixLocation = glGetUniformLocation(mesh.shaderID, 
+			glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
+				Camera::viewMatrix() * combinedTransformationMatrix;
+
+			int mvpMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
 														 "mvpMatrix");
-		glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
 
-		if(mesh.usesIndices)
-		{
-			glDrawElements(GL_TRIANGLES, mesh.vertexCount, 
+			glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
+
+			if(entityPtr->meshPtr->usesIndices)
+			{
+				glDrawElements(GL_TRIANGLES, entityPtr->meshPtr->vertexCount,
 						   GL_UNSIGNED_INT, 0);
-		}	
-		else
-		{
-			glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+			}		
+			else
+			{
+				glDrawArrays(GL_TRIANGLES, 0, entityPtr->meshPtr->vertexCount);
+			}	
 		}
 	}
 }
