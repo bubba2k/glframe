@@ -3,7 +3,7 @@ SDIR 	= ./src
 
 CC 		= g++
 CFLAGS 	= -Wextra -Wall -g
-LIBS   	= -lSDL2 -lGL -lGLEW
+LIBS   	= -lSDL2 -lGL -lGLEW -lassimp
 
 all: compile-all archive gen-template
 

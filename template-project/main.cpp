@@ -4,11 +4,12 @@
 
 int main()
 {
-	Display display("Window", 1400, 800);
+	Display display("Window", 1400, 800, DISPLAY_DEBUG_MODE);
 
 	ShaderProgram shader({"vert.shader", "frag.shader"}, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER});
 
 	Mesh meshPyramid;
+	Mesh meshTeapot(importMesh("assets/teapot.obj"));
 
 	float vertices[] = { 
 		-1.0f, -1.0f,  1.0f,
@@ -33,37 +34,21 @@ int main()
 	entityPyramid.setMesh(meshPyramid);
 	entityPyramid.setShader(shader);
 
-	entityPyramid.setScale(0.2);
+	Entity entityTeapod;
+	entityTeapod.setMesh(meshTeapot);
+	entityTeapod.setShader(shader);
 
-	int dimension = 10;
-	std::vector<EntityInstance> pyramids;
-	for(int x = -5; x < dimension; x++)
-	{
-		for(int y = -5; y < dimension; y++)
-		{
-			for(int z = -5; z < dimension; z++)
-			{
-				auto instance = entityPyramid.createInstance();
-				instance.setPosition(x, y, z);
-
-				pyramids.push_back(instance);
-			}
-		}
-	}
+	auto teapotInstance = entityTeapod.createInstance();
 
 	std::cout << "Total entity instances: " << numTotalEntityInstances() << 
 		std::endl;
 
 	while(!display.isClosed())
 	{
-
-		for(auto& pyramid : pyramids)
-			pyramid.setRotation(getTime() * ( (float) pyramid.getID() / 100.0), 
-								getTime() * ( (float) pyramid.getID() / 75.0), 0);
-
-		Camera::setPosition(sin(getTime() * 0.15) * 12.0, sin(getTime() * 0.25) * 3.0, cos(getTime() * 0.2) * 10.0);
+		Camera::setPosition(sin(getTime() * 0.15) * 12.0, 
+							sin(getTime() * 0.25) * 3.0, 
+							cos(getTime() * 0.2) * 10.0);
 
 		display.update();
-		std::cout << getElapsedTime() << "\n";
 	}
 }

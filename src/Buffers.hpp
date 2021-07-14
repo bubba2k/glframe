@@ -11,6 +11,10 @@ class VertexArray
 	VertexArray();
 	~VertexArray();
 
+	VertexArray operator=(const VertexArray&) = delete;
+	VertexArray(const VertexArray&) = delete;
+	VertexArray(VertexArray&&);
+
 	void bind() const;
 	void unbind() const;
 };
@@ -28,6 +32,10 @@ class VertexBuffer
 	VertexBuffer(GLenum argUsage, unsigned int size = 0, void * data = nullptr);
 	~VertexBuffer();
 	
+	VertexBuffer operator=(const VertexBuffer&) = delete;
+	VertexBuffer(const VertexBuffer&) = delete;
+	VertexBuffer(VertexBuffer&&);
+
 	void bind();
 	void unbind();
 
@@ -48,6 +56,10 @@ class IndexBuffer
 	IndexBuffer(GLenum argUsage, unsigned int size = 0, void * data = nullptr);
 	~IndexBuffer();
 	
+	IndexBuffer operator=(const IndexBuffer&) = delete;
+	IndexBuffer(const IndexBuffer&) = delete;
+	IndexBuffer(IndexBuffer&&);
+
 	void bind();
 	void unbind();
 

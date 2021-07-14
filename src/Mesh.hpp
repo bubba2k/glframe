@@ -16,6 +16,7 @@ class Mesh
 
 	VertexArray vertexArray;
 	VertexBuffer buffPositions;
+	VertexBuffer buffNormals;
 	IndexBuffer indexBuffer;
 
 	unsigned int vertexCount;
@@ -30,10 +31,18 @@ public:
 	Mesh(GLenum usage = GL_STATIC_DRAW);
 	~Mesh();
 
+	// bla bla rule of three
+	Mesh operator=(const Mesh&) = delete;
+	Mesh(const Mesh&) = delete;
+	Mesh(Mesh&&);
+
 	void pushPositions(unsigned int count, float * values);
 	void pushIndices(unsigned int count, unsigned int * values);
+	void pushNormals(unsigned int count, float * values);
 
 	inline int getID() { return this->ID; }
 };
+
+Mesh importMesh(const std::string&);
 
 #endif

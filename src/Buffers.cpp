@@ -12,6 +12,12 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &id);
 }
 
+VertexArray::VertexArray(VertexArray&& that)
+{
+	id = that.id;
+	that.id = -1;
+}
+
 void VertexArray::bind() const
 {
 	glBindVertexArray(id);
@@ -38,6 +44,18 @@ VertexBuffer::VertexBuffer(GLenum argUsage, unsigned int size, void * data) :
 VertexBuffer::~VertexBuffer()
 {
 	glDeleteBuffers(1, &id);
+}
+
+VertexBuffer::VertexBuffer(VertexBuffer&& that)
+{
+	id = that.id;
+	usage = that.usage;
+	dataIsSet = that.dataIsSet;
+
+	last_data = that.last_data;
+	last_size = that.last_size;
+
+	that.id = -1;
 }
 
 void VertexBuffer::bind()
@@ -85,6 +103,17 @@ IndexBuffer::IndexBuffer(GLenum argUsage, unsigned int size, void * data) :
 IndexBuffer::~IndexBuffer()
 {
 	glDeleteBuffers(1, &id);
+}
+
+IndexBuffer::IndexBuffer(IndexBuffer&& that)
+{
+	id = that.id;
+	usage = that.usage;
+	dataIsSet = that.dataIsSet;
+	last_data = that.last_data;
+	last_size = that.last_size;
+
+	that.id = -1;
 }
 
 void IndexBuffer::bind()
