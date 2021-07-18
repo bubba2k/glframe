@@ -2,6 +2,7 @@
 #define BODY_HPP_
 
 #include "Mesh.hpp"
+#include "Texture.hpp"
 
 class EntityInstance;
 
@@ -14,6 +15,7 @@ class Entity
 	int id;
 
 	Mesh * meshPtr;
+	Texture * texturePtr;
 
     int shaderID;
 
@@ -43,8 +45,8 @@ public:
 	inline int getNumInstances() { return instanceTracker.num(); };
 
 	void setMesh(Mesh& mesh);
-
 	void setShader(ShaderProgram &argShader);
+	void setTexture(Texture &texture);
 
     void setPosition(glm::vec3 argPosition);
     void setPosition(float argX, float argY, float argZ);

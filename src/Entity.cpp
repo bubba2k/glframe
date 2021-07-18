@@ -8,7 +8,8 @@
 Tracker<Entity> Entity::entityTracker;
 
 Entity::Entity()
-	: meshPtr(nullptr), shaderID(-1), locationVector{0, 0, 0},
+	: meshPtr(nullptr), texturePtr(nullptr),
+	  shaderID(-1), locationVector{0, 0, 0},
 	  rotationVector{0, 0, 0}, scalingVector{1, 1, 1},
 	  transformationHasChanged(true)
 {
@@ -54,6 +55,11 @@ void Entity::setMesh(Mesh& mesh)
 void Entity::setShader(ShaderProgram &argShader)
 {
 	shaderID = argShader.getID();
+}
+
+void Entity::setTexture(Texture &texture)
+{
+	texturePtr = &texture;
 }
 
 void Entity::setPosition(glm::vec3 argPosition)

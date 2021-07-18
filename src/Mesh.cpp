@@ -17,9 +17,11 @@ Mesh::Mesh(GLenum argUsage) :
 
 		buffPositions	(usage),
 		buffNormals     (usage),
+		buffTextureCoord(usage),
 		indexBuffer		(usage),
 
-		usesIndices		(false)
+		usesIndices		(false),
+		_hasTextureCoords(false)
 {
 	ID = meshTracker.track(this);
 
@@ -37,6 +39,11 @@ Mesh::Mesh(GLenum argUsage) :
     glEnableVertexAttribArray(1);
 	buffNormals.unbind();
 
+	buffTextureCoord.bind();
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	glEnableVertexAttribArray(2);
+	buffTextureCoord.unbind();
+
 	vertexArray.unbind();
 }
 
@@ -46,13 +53,15 @@ Mesh::~Mesh()
 }
 
 Mesh::Mesh(Mesh&& that) : vertexArray(std::move(that.vertexArray)),
-						  buffNormals(std::move(that.buffNormals)),
 						  buffPositions(std::move(that.buffPositions)),
+						  buffNormals(std::move(that.buffNormals)),
+						  buffTextureCoord(std::move(that.buffTextureCoord)),
 						  indexBuffer(std::move(that.indexBuffer))
 {
 	usage = that.usage;
 	vertexCount = that.vertexCount;
 	usesIndices = that.usesIndices;
+	_hasTextureCoords = that._hasTextureCoords;
 
 	ID = that.ID;
 	that.ID = -1;
@@ -62,10 +71,17 @@ void Mesh::pushPositions(unsigned int count, float * values)
 {
 	buffPositions.setData(count * 3 * sizeof(float), values);
 	
-	if(!usesIndices)
-	{
-		vertexCount = count;
-	}
+	vertexCount = count;
+}
+
+void Mesh::pushNormals(unsigned int count, float * values)
+{
+	buffNormals.setData(count * 3 * sizeof(float), values);
+}
+
+void Mesh::pushTextureCoord(unsigned int count, float * values)
+{
+	buffTextureCoord.setData(count * 2 * sizeof(float), values);
 }
 
 void Mesh::pushIndices(unsigned int count, unsigned int * values)
@@ -86,18 +102,20 @@ Mesh importMesh(const std::string& filePath)
 
 	const aiScene *scene = importer.ReadFile(filePath, 
 			aiProcess_Triangulate | aiProcess_OptimizeGraph |
-			aiProcess_OptimizeMeshes);
+			aiProcess_OptimizeMeshes | aiProcess_GenNormals);
 
 	std::vector<aiVector3D> vertices, normals;
-	for(unsigned i = 0; i < scene->mNumMeshes; i++)
-	{
-		aiMesh * sMesh = scene->mMeshes[i];
 
-		for(unsigned j = 0; j < sMesh->mNumVertices; j++)
-			vertices.push_back(sMesh->mVertices[j]);
+	aiMesh * sMesh = scene->mMeshes[0];
+
+	for(unsigned j = 0; j < sMesh->mNumVertices; j++)
+	{
+		vertices.push_back(sMesh->mVertices[j]);
+		normals.push_back(sMesh->mNormals[j]);
 	}
 
-	mesh.pushPositions(vertices.size() * 3, (float *) &vertices[0]);
+	mesh.pushPositions(vertices.size(), (float *) &vertices[0]);
+	mesh.pushNormals(normals.size(), (float *) &normals[0]);
 
 	// TODO: hope the move semantics work
 	return std::move(mesh);

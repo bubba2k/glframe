@@ -14,5 +14,6 @@
 #include "ShaderProgram.hpp"
 #include "Util.hpp"
 #include "Entity.hpp"
+#include "Texture.hpp"
 
 #endif

@@ -43,18 +43,34 @@ void Renderer::renderScene()
 
 		for(EntityInstance *instancePtr : entityPtr->instanceTracker)
 		{
-			// Create and send MVP Matrix
-			glm::mat4 combinedTransformationMatrix = 
+			// Create and send transformationMatrices
+			glm::mat4 modelMatrix = 
 				instancePtr->getTransformationMatrix() * 
 				entityTransformationMatrix;
 
-			glm::mat4 mvpMatrix = Renderer::projectionMatrix() * 
-				Camera::viewMatrix() * combinedTransformationMatrix;
+			int modelMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
+														 "modelMatrix");
+			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 
-			int mvpMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
-														 "mvpMatrix");
+			int viewMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
+														 "viewMatrix");
+			glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &Camera::viewMatrix()[0][0]);
 
-			glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0]);
+			int projectionMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
+														 "projectionMatrix");
+			glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &Renderer::projectionMatrix()[0][0]);
+
+			int hasTextureLocation = glGetUniformLocation(entityPtr->shaderID, "hasTexture");
+			// bind texture
+			if(entityPtr->texturePtr == nullptr)
+			{
+				glUniform1i(hasTextureLocation, 0);
+			}
+			else
+			{
+				glUniform1i(hasTextureLocation, 1);
+				entityPtr->texturePtr->bind();
+			}
 
 			if(entityPtr->meshPtr->usesIndices)
 			{

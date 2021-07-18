@@ -17,10 +17,12 @@ class Mesh
 	VertexArray vertexArray;
 	VertexBuffer buffPositions;
 	VertexBuffer buffNormals;
+	VertexBuffer buffTextureCoord;
 	IndexBuffer indexBuffer;
 
 	unsigned int vertexCount;
 	bool usesIndices;
+	bool _hasTextureCoords;
 
 	int ID;
 
@@ -39,8 +41,10 @@ public:
 	void pushPositions(unsigned int count, float * values);
 	void pushIndices(unsigned int count, unsigned int * values);
 	void pushNormals(unsigned int count, float * values);
+	void pushTextureCoord(unsigned int count, float * values);
 
 	inline int getID() { return this->ID; }
+	inline bool hasTextureCoords() { return _hasTextureCoords; };
 };
 
 Mesh importMesh(const std::string&);
