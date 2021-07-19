@@ -6,22 +6,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <string>
+#include <array>
+
 #include "Mesh.hpp"
 #include <algorithm>
 
 Tracker<Mesh> Mesh::meshTracker;
 
-Mesh::Mesh(GLenum argUsage) :
-
-		usage			(argUsage),
-
-		buffPositions	(usage),
-		buffNormals     (usage),
-		buffTextureCoord(usage),
-		indexBuffer		(usage),
-
-		usesIndices		(false),
-		_hasTextureCoords(false)
+void Mesh::_constructor_setup()
 {
 	ID = meshTracker.track(this);
 
@@ -45,6 +38,66 @@ Mesh::Mesh(GLenum argUsage) :
 	buffTextureCoord.unbind();
 
 	vertexArray.unbind();
+}
+
+Mesh::Mesh(GLenum argUsage) :
+		usage			(argUsage),
+
+		buffPositions	(usage),
+		buffNormals     (usage),
+		buffTextureCoord(usage),
+		indexBuffer		(usage),
+
+		usesIndices		(false),
+		_hasTextureCoords(false)
+{
+	_constructor_setup();
+}
+
+Mesh::Mesh(const std::string& filePath, GLenum argUsage) :
+		usage			(argUsage),
+
+		buffPositions	(usage),
+		buffNormals     (usage),
+		buffTextureCoord(usage),
+		indexBuffer		(usage),
+
+		usesIndices		(false),
+		_hasTextureCoords(false)
+{
+	_constructor_setup();
+
+    using namespace Assimp;
+
+    Importer importer;
+
+	const aiScene *scene = importer.ReadFile(filePath, 
+			aiProcess_Triangulate | aiProcess_OptimizeGraph |
+			aiProcess_OptimizeMeshes | aiProcess_GenNormals);
+
+	std::vector<aiVector3D> vertices, normals;
+	std::vector<std::array<float, 2>> texCoords;
+
+	aiMesh * sMesh = scene->mMeshes[0];
+
+	for(unsigned j = 0; j < sMesh->mNumVertices; j++)
+	{
+		vertices.push_back(sMesh->mVertices[j]);
+		normals.push_back(sMesh->mNormals[j]);
+	}
+
+	if(sMesh->HasTextureCoords(0) && sMesh->mNumUVComponents[0] > 1)
+	{
+		for(unsigned j = 0; j < sMesh->mNumVertices; j++)
+		{
+			texCoords.push_back({sMesh->mTextureCoords[0][j][0],
+								 sMesh->mTextureCoords[0][j][1]});
+		}
+		pushTextureCoord(texCoords.size(), (float *) &texCoords[0]);
+	}
+
+	pushPositions(vertices.size(), (float *) &vertices[0]);
+	pushNormals(normals.size(), (float *) &normals[0]);
 }
 
 Mesh::~Mesh()
@@ -82,6 +135,7 @@ void Mesh::pushNormals(unsigned int count, float * values)
 void Mesh::pushTextureCoord(unsigned int count, float * values)
 {
 	buffTextureCoord.setData(count * 2 * sizeof(float), values);
+	_hasTextureCoords = true;
 }
 
 void Mesh::pushIndices(unsigned int count, unsigned int * values)
@@ -91,32 +145,4 @@ void Mesh::pushIndices(unsigned int count, unsigned int * values)
 	usesIndices = true;
 
 	vertexCount = count;
-}
-
-Mesh importMesh(const std::string& filePath)
-{
-    using namespace Assimp;
-
-    Mesh mesh;
-    Importer importer;
-
-	const aiScene *scene = importer.ReadFile(filePath, 
-			aiProcess_Triangulate | aiProcess_OptimizeGraph |
-			aiProcess_OptimizeMeshes | aiProcess_GenNormals);
-
-	std::vector<aiVector3D> vertices, normals;
-
-	aiMesh * sMesh = scene->mMeshes[0];
-
-	for(unsigned j = 0; j < sMesh->mNumVertices; j++)
-	{
-		vertices.push_back(sMesh->mVertices[j]);
-		normals.push_back(sMesh->mNormals[j]);
-	}
-
-	mesh.pushPositions(vertices.size(), (float *) &vertices[0]);
-	mesh.pushNormals(normals.size(), (float *) &normals[0]);
-
-	// TODO: hope the move semantics work
-	return std::move(mesh);
 }

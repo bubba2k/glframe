@@ -2,6 +2,7 @@
 
 #include "Display.hpp"
 #include "Renderer.hpp"
+#include "ShaderProgram.hpp"
 
 static void DebugMessageCallback(GLenum source, GLenum type, GLuint id,
                             GLenum severity, GLsizei length,
@@ -59,6 +60,8 @@ Display::Display(std::string title, int width, int height, int flags)
 	// Init the renderer
 	float aspectRatio = (float) width / (float) height;
 	Renderer::init(aspectRatio);
+	// Init default Shader
+	ShaderProgram::init();
 
 	closed = false;
 }

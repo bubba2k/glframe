@@ -36,7 +36,7 @@ void Renderer::renderScene()
 	for(Entity *entityPtr : Entity::entityTracker)
 	{
 		entityPtr->meshPtr->vertexArray.bind();
-		glUseProgram(entityPtr->shaderID);
+		ShaderProgram::defaultShader.use();
 
 		glm::mat4 entityTransformationMatrix = 
 			entityPtr->getTransformationMatrix();
@@ -48,19 +48,23 @@ void Renderer::renderScene()
 				instancePtr->getTransformationMatrix() * 
 				entityTransformationMatrix;
 
-			int modelMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
-														 "modelMatrix");
+			int modelMatrixLocation = glGetUniformLocation(
+									  ShaderProgram::defaultShader.getID(),
+									  "modelMatrix");
 			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 
-			int viewMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
-														 "viewMatrix");
+			int viewMatrixLocation = glGetUniformLocation(
+									 ShaderProgram::defaultShader.getID(),
+									 "viewMatrix");
 			glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &Camera::viewMatrix()[0][0]);
 
-			int projectionMatrixLocation = glGetUniformLocation(entityPtr->shaderID,
-														 "projectionMatrix");
+			int projectionMatrixLocation = glGetUniformLocation(
+										   ShaderProgram::defaultShader.getID(),
+										   "projectionMatrix");
 			glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &Renderer::projectionMatrix()[0][0]);
 
-			int hasTextureLocation = glGetUniformLocation(entityPtr->shaderID, "hasTexture");
+			int hasTextureLocation = glGetUniformLocation(
+									 ShaderProgram::defaultShader.getID(), "hasTexture");
 			// bind texture
 			if(entityPtr->texturePtr == nullptr)
 			{

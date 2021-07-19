@@ -29,8 +29,11 @@ class Mesh
 	// keep track of all Meshes
 	static Tracker<Mesh> meshTracker;
 
+	void _constructor_setup();
+
 public:
 	Mesh(GLenum usage = GL_STATIC_DRAW);
+	Mesh(const std::string&, GLenum usage = GL_STATIC_DRAW);
 	~Mesh();
 
 	// bla bla rule of three
@@ -43,10 +46,8 @@ public:
 	void pushNormals(unsigned int count, float * values);
 	void pushTextureCoord(unsigned int count, float * values);
 
-	inline int getID() { return this->ID; }
-	inline bool hasTextureCoords() { return _hasTextureCoords; };
+	inline int getID() const { return this->ID; }
+	inline bool hasTextureCoords() const { return _hasTextureCoords; };
 };
-
-Mesh importMesh(const std::string&);
 
 #endif

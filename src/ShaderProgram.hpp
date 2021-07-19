@@ -12,12 +12,18 @@ class ShaderProgram
 	bool valid;
 
 	public:
+	ShaderProgram();
 	ShaderProgram(std::vector<std::string> vecFilenames, std::vector<unsigned int> vecTypes);
+	void fromStrings(std::vector<std::string> vecSources);
 	~ShaderProgram();
+
+	static ShaderProgram defaultShader;
+	static void init();
 
 	unsigned int getID();
 	void use();
 	bool isValid();
 };
+
 
 #endif
