@@ -46,6 +46,10 @@ in  vec3 localPosition;
 in  vec3 localNormal;
 in  vec2 localTexCoord;
 
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
 uniform sampler2D theTexture;
 uniform bool hasTexture;
 
@@ -53,22 +57,11 @@ out vec4 FragColor;
 
 void main()
 {
-    vec3 vecNormalizeMult = vec3(0.5, 0.5, 0.5);
-    vec3 vecNormalizeAdd  = vec3(0.5, 0.5, 0.5);
-
-	vec3 lightSource = vec3(0.5, -0.7, -0.2);
-
-    /* if(hasTexture)
-    {
-        FragColor = texture(theTexture, localTexCoord);
-    }
-    else
-    {
-        FragColor = vec4((localPosition * vecNormalizeMult) + vecNormalizeAdd, 1);
-    } */
-
-    vec3 color = (localPosition * vecNormalizeMult) + vecNormalizeAdd;
-	FragColor  = vec4(color * dot(localNormal, lightSource), 1);
+	if(hasTexture)
+		FragColor = texture(theTexture, localTexCoord);
+	else
+		FragColor = vec4(localPosition * vec3(0.5, 0.5, 0.5) 
+						 + vec3(0.5, 0.5, 0.5), 1);
 }
 )STR";
 

@@ -1,4 +1,3 @@
-#include "libs/Camera.hpp"
 #include "libs/GLframe.hpp"
 
 #include <iostream>
@@ -33,7 +32,7 @@ int main(int argc, char *argv[])
 	Entity botEnt;
 	botEnt.setMesh(botMesh);
 	botEnt.setRotation(0, 90, 0);
-	botEnt.setTexture(framebotTexture);
+	botEnt.setTexture(wallTexture);
 	
 	auto botInstance = botEnt.createInstance();
 	botInstance.setScale(0.5);
@@ -43,7 +42,7 @@ int main(int argc, char *argv[])
 
 	while(!display.isClosed())
 	{
-		botInstance.setRotation(getTime(), getTime() * 2.0, 0);
+		botInstance.setRotation(getTime() * 7.0, getTime() * 5.0, 0);
 
 		display.update();
 	}
