@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include "Texture.hpp"
-#include "stb_image.h"
+#include "../external/stb_image/stb_image.h"
 
 #include <string>
 

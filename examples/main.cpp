@@ -1,4 +1,4 @@
-#include "libs/GLframe.hpp"
+#include <GLframe.hpp>
 
 #include <iostream>
 
