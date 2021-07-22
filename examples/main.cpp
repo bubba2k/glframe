@@ -1,4 +1,4 @@
-#include <GLframe.hpp>
+#include "../src/GLframe.hpp"
 
 #include <iostream>
 
@@ -10,39 +10,26 @@ int main(int argc, char *argv[])
 
 	Display display("Window", 1400, 800, flags);
 
-	Mesh botMesh("assets/framebot.dae");
+	Mesh tableMesh("assets/table/table.dae");
+	Mesh donutMesh("assets/donut/donut.dae");
 
-	Texture wallTexture("assets/framebottex.png");
-	Texture framebotTexture("assets/framebottex.png");
+	Texture tableTex("assets/table/wood128.png"),
+			donutTex("assets/donut/donut_texture.png");
 
-	Mesh triangleMesh;
-	float pos[] = {0.0, 0.0, 0.0,
-				   1.0, 1.0, 0,
-				   0.0, 1.0, 0};
-	float uv[]  = {0.0, 0.0,
-				   1.0, 1.0,
-				   0.0, 1.0};
-	triangleMesh.pushPositions(3, pos);
-	triangleMesh.pushTextureCoord(3, uv);
+	Entity tableEnt, donutEnt;
+	tableEnt.setMesh(tableMesh); tableEnt.setTexture(tableTex);
+	donutEnt.setMesh(donutMesh); donutEnt.setTexture(donutTex);
 
-	Entity triangle;
-	triangle.setMesh(triangleMesh);
-	triangle.setTexture(framebotTexture);
+	auto donut = donutEnt.createInstance(), table = tableEnt.createInstance();
+	table.visible(false);
 
-	Entity botEnt;
-	botEnt.setMesh(botMesh);
-	botEnt.setRotation(0, 90, 0);
-	botEnt.setTexture(wallTexture);
-	
-	auto botInstance = botEnt.createInstance();
-	botInstance.setScale(0.5);
-	// auto triInstance = triangle.createInstance();
+	Camera::setPosition(0, 0, 0.4);
 
-	Camera::setPosition(0, 0, 2.5);
+	donut.setPosition(0, 0, 0);
 
 	while(!display.isClosed())
 	{
-		botInstance.setRotation(getTime() * 7.0, getTime() * 5.0, 0);
+		donut.setRotation(getTime() * 7.0, getTime() * 5.0, 0);
 
 		display.update();
 	}
