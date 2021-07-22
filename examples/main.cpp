@@ -13,15 +13,15 @@ int main(int argc, char *argv[])
 	Mesh tableMesh("assets/table/table.dae");
 	Mesh donutMesh("assets/donut/donut.dae");
 
-	Texture tableTex("assets/table/wood128.png"),
-			donutTex("assets/donut/donut_texture.png");
+	Texture tableTex("assets/table/wood128.png", GL_NEAREST),
+			donutTex("assets/donut/donut_texture.png", GL_NEAREST);
 
 	Entity tableEnt, donutEnt;
 	tableEnt.setMesh(tableMesh); tableEnt.setTexture(tableTex);
 	donutEnt.setMesh(donutMesh); donutEnt.setTexture(donutTex);
 
 	auto donut = donutEnt.createInstance(), table = tableEnt.createInstance();
-	table.visible(false);
+	table.setVisible(false);
 
 	Camera::setPosition(0, 0, 0.4);
 
