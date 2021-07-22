@@ -71,6 +71,7 @@ class EntityInstance
 			  scalingVector;
 
 	bool transformationHasChanged;
+	bool _isVisible;
 
 public:
 	EntityInstance(Entity &);
@@ -92,6 +93,9 @@ public:
     void setScale(glm::vec3 argScale);
     void setScale(float argX, float argY, float argZ);
     void setScale(float argUniformScale);
+
+	inline void setVisible(bool arg) { _isVisible = arg; };
+	inline bool isVisible() { return _isVisible; };
 };
 
 #endif

@@ -110,7 +110,8 @@ void Entity::setScale(float argUniformScale)
 
 EntityInstance::EntityInstance(Entity& entity)
 	: locationVector{0, 0, 0}, rotationVector{0, 0, 0}, scalingVector{1, 1, 1},
-	  transformationHasChanged(true)
+	  transformationHasChanged(true),
+	  _isVisible(true)
 {
 	entity.instanceTracker.track(this);
 	this->baseEntity = &entity;

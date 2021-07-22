@@ -43,6 +43,9 @@ void Renderer::renderScene()
 
 		for(EntityInstance *instancePtr : entityPtr->instanceTracker)
 		{
+			if(!instancePtr->isVisible())
+				continue;
+
 			// Create and send transformationMatrices
 			glm::mat4 modelMatrix = 
 				instancePtr->getTransformationMatrix() * 
