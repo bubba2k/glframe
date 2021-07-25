@@ -11,7 +11,9 @@ int main(int argc, char *argv[])
 	Display display("Window", 1400, 800, flags);
 
 	Mesh tableMesh("assets/table/table.dae");
-	Mesh donutMesh("assets/donut/donut.dae");
+	Mesh donutMesh("assets/donut/donut.obj", MeshShade::SMOOTH);
+	std::cout << "Donut has this many vertices: " << 
+				 donutMesh.getNumVertices() << std::endl;
 
 	Texture tableTex("assets/table/wood128.png", GL_NEAREST),
 			donutTex("assets/donut/donut_texture.png", GL_NEAREST);
@@ -29,7 +31,7 @@ int main(int argc, char *argv[])
 
 	while(!display.isClosed())
 	{
-		donut.setRotation(getTime() * 7.0, getTime() * 5.0, 0);
+		donut.setRotation(getTime() * 7.0, 0, 0);
 
 		display.update();
 	}

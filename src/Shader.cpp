@@ -19,6 +19,8 @@ layout (location = 2) in vec2 aTexCoord;
 out vec3 localPosition;
 out vec3 localNormal;
 out vec2 localTexCoord;
+out vec3 FragPos;
+out mat3 normalMatrix;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -27,15 +29,15 @@ uniform mat4 projectionMatrix;
 void main()
 {
     mat4 mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
+    gl_Position = mvpMatrix * vec4(aPos, 1.0);
 
-    vec4 transformedPosition = vec4(aPos.xyz, 1);
-    transformedPosition = mvpMatrix * transformedPosition;
-
-    gl_Position = transformedPosition;
+	FragPos = vec3(modelMatrix * vec4(aPos, 1.0));
 
     localPosition = aPos;
     localNormal   = aNormal;
     localTexCoord = aTexCoord;
+
+	normalMatrix  = mat3(transpose(inverse(modelMatrix)));
 }
 )STR";
 
@@ -45,6 +47,8 @@ const std::string fragSource = R"STR(
 in  vec3 localPosition;
 in  vec3 localNormal;
 in  vec2 localTexCoord;
+in  vec3 FragPos;
+in  mat3 normalMatrix;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -57,11 +61,24 @@ out vec4 FragColor;
 
 void main()
 {
+	vec3  lightPos = vec3(0, 6, 0);
+	vec3  lightColor = vec3(1.0, 0.945, 0.9);
+	float ambientStrength = 0.2;
+
+	vec3  normalizedNormal = normalize(normalMatrix * localNormal);
+	vec3  lightDirection = normalize(lightPos - FragPos);
+	float diffuseStrength = max(dot(normalizedNormal, lightDirection), 0.0);
+	vec3  diffuse = diffuseStrength * lightColor;
+
+	vec3  ambient = ambientStrength * lightColor;
+
 	if(hasTexture)
 		FragColor = texture(theTexture, localTexCoord);
 	else
 		FragColor = vec4(localPosition * vec3(0.5, 0.5, 0.5) 
 						 + vec3(0.5, 0.5, 0.5), 1);
+
+	FragColor *= vec4(ambient + diffuse, 1.0);
 }
 )STR";
 

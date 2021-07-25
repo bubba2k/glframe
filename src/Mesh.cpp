@@ -54,7 +54,7 @@ Mesh::Mesh(GLenum argUsage) :
 	_constructor_setup();
 }
 
-Mesh::Mesh(const std::string& filePath, GLenum argUsage) :
+Mesh::Mesh(const std::string& filePath, MeshShade shade, GLenum argUsage) :
 		usage			(argUsage),
 
 		buffPositions	(usage),
@@ -71,9 +71,18 @@ Mesh::Mesh(const std::string& filePath, GLenum argUsage) :
 
     Importer importer;
 
+	// Make the importer remove the original normals, to recompute them below
+	importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
+								aiComponent_NORMALS);
+
+	// Flat or smooth normal generation
+	int normalFlag = (shade == MeshShade::SMOOTH) ? aiProcess_GenSmoothNormals
+												  : aiProcess_GenNormals;
+
 	const aiScene *scene = importer.ReadFile(filePath, 
 			aiProcess_Triangulate | aiProcess_OptimizeGraph |
-			aiProcess_OptimizeMeshes | aiProcess_GenNormals);
+			aiProcess_OptimizeMeshes | aiProcess_RemoveComponent |
+			normalFlag);
 
 	std::vector<aiVector3D> vertices, normals;
 	std::vector<std::array<float, 2>> texCoords;

@@ -8,6 +8,12 @@
 #include "Buffers.hpp"
 #include "Tracker.hpp"
 
+enum MeshShade
+{
+	SMOOTH,
+	FLAT
+};
+
 class Mesh
 {
 	friend class Renderer;
@@ -33,7 +39,7 @@ class Mesh
 
 public:
 	Mesh(GLenum usage = GL_STATIC_DRAW);
-	Mesh(const std::string&, GLenum usage = GL_STATIC_DRAW);
+	Mesh(const std::string&, MeshShade shade = MeshShade::SMOOTH, GLenum usage = GL_STATIC_DRAW);
 	~Mesh();
 
 	// bla bla rule of three
@@ -46,8 +52,9 @@ public:
 	void pushNormals(unsigned int count, float * values);
 	void pushTextureCoord(unsigned int count, float * values);
 
-	inline int getID() const { return this->ID; }
+	inline int  getID() const { return this->ID; }
 	inline bool hasTextureCoords() const { return _hasTextureCoords; };
+	inline int  getNumVertices() const { return vertexCount; };
 };
 
 #endif
