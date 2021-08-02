@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
 	std::cout << "Donut has this many vertices: " << 
 				 donutMesh.getNumVertices() << std::endl;
 
-	Texture tableTex("assets/table/wood128.png", GL_NEAREST),
-			donutTex("assets/donut/donut_texture.png", GL_NEAREST);
+	Texture tableTex("assets/table/wood128.png", GL_LINEAR),
+			donutTex("assets/donut/donut_texture.png", GL_LINEAR);
 
 	Entity tableEnt, donutEnt;
 	tableEnt.setMesh(tableMesh); tableEnt.setTexture(tableTex);
