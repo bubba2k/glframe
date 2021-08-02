@@ -57,11 +57,11 @@ Display::Display(std::string title, int width, int height, int flags)
 		glDebugMessageCallback(DebugMessageCallback, NULL);
 	}
 
+	// Init default Shader (ALWAYS DO THIS FIRST)
+	ShaderProgram::init();
 	// Init the renderer
 	float aspectRatio = (float) width / (float) height;
 	Renderer::init(aspectRatio);
-	// Init default Shader
-	ShaderProgram::init();
 
 	closed = false;
 }

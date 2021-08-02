@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	while(!display.isClosed())
 	{
-		donut.setRotation(getTime() * 7.0, 0, 0);
+		donut.setRotation(getTime() * 7.0, getTime() * 0.4, getTime() * 9.0);
 
 		display.update();
 	}

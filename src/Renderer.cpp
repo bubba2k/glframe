@@ -13,6 +13,8 @@ bool Renderer::init(float argAspectRatio)
 	aspectRatio = argAspectRatio;
 	projectionHasChanged = true;
 
+	ShaderProgram::defaultShader.use();
+
 	return true;
 }
 
@@ -36,7 +38,6 @@ void Renderer::renderScene()
 	for(Entity *entityPtr : Entity::entityTracker)
 	{
 		entityPtr->meshPtr->vertexArray.bind();
-		ShaderProgram::defaultShader.use();
 
 		glm::mat4 entityTransformationMatrix = 
 			entityPtr->getTransformationMatrix();
