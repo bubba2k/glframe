@@ -37,6 +37,8 @@ set_target_properties(glframe PROPERTIES
 					  PUBLIC_HEADER ${HeaderFiles}
 					  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
 
+# Need to set this since we use some GLM extensions
+add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
 
 # build the example project
 add_executable(example ${CMAKE_SOURCE_DIR}/examples/main.cpp)
