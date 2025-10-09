@@ -61,24 +61,33 @@ out vec4 FragColor;
 
 void main()
 {
-	vec3  lightPos = vec3(0, 6, 0);
+	vec3  lightPos = vec3(1, 0.5, 1);
 	vec3  lightColor = vec3(1.0, 0.945, 0.9);
 	float ambientStrength = 0.2;
+	vec3  ambient = ambientStrength * lightColor;
 
 	vec3  normalizedNormal = normalize(normalMatrix * localNormal);
 	vec3  lightDirection = normalize(lightPos - FragPos);
 	float diffuseStrength = max(dot(normalizedNormal, lightDirection), 0.0);
 	vec3  diffuse = diffuseStrength * lightColor;
 
-	vec3  ambient = ambientStrength * lightColor;
+	// Use the forward vector from the view matrix as the view direction.
+	// Not perspective correct, but good enough.
+	vec3 viewDir = -viewMatrix[2].xyz;
+	float shininess = 16.0;
+	vec3 halfway = normalize(lightDirection + viewDir);
+	float viewHalfwayDot = clamp(dot(viewDir, halfway), 0.0, 1.0);
+	float specularStrength = pow(viewHalfwayDot, shininess);
+	// Specular highlights are white
+	vec3 specular = specularStrength * vec3(1.0, 1.0, 1.0);
 
-	if(hasTexture)
+	if(hasTexture) // If statements in fragment shaders are no good, but for now it shall suffice
 		FragColor = texture(theTexture, localTexCoord);
 	else
 		FragColor = vec4(localPosition * vec3(0.5, 0.5, 0.5) 
 						 + vec3(0.5, 0.5, 0.5), 1);
 
-	FragColor *= vec4(ambient + diffuse, 1.0);
+	FragColor *= vec4(ambient + diffuse + specularStrength, 1.0);
 }
 )STR";
 
