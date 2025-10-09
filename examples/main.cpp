@@ -8,30 +8,27 @@ int main(int argc, char *argv[])
 	if(argc > 1)
 		flags |= DISPLAY_DEBUG_MODE;
 
-	Display display("Window", 1400, 800, flags);
+	Display display("Window", 1024, 720, flags);
 
-	Mesh tableMesh("assets/table/table.dae");
-	Mesh donutMesh("assets/donut/donut.obj", MeshShade::SMOOTH);
+	Mesh catMesh("assets/cat/concrete_cat_statue_2k.obj", MeshShade::SMOOTH);
 	std::cout << "Donut has this many vertices: " << 
-				 donutMesh.getNumVertices() << std::endl;
+				 catMesh.getNumVertices() << std::endl;
 
-	Texture tableTex("assets/table/wood128.png", GL_LINEAR),
-			donutTex("assets/donut/donut_texture.png", GL_LINEAR);
+	Texture catTexture("assets/cat/textures/concrete_cat_statue_diff_2k.jpg", GL_LINEAR);
 
-	Entity tableEnt, donutEnt;
-	tableEnt.setMesh(tableMesh); tableEnt.setTexture(tableTex);
-	donutEnt.setMesh(donutMesh); donutEnt.setTexture(donutTex);
+	Entity catEntity;
+	catEntity.setMesh(catMesh); 
+	catEntity.setTexture(catTexture);
 
-	auto donut = donutEnt.createInstance(), table = tableEnt.createInstance();
-	table.setVisible(false);
+	auto catInstance = catEntity.createInstance();
 
 	Camera::setPosition(0, 0, 0.4);
 
-	donut.setPosition(0, 0, 0);
+	catInstance.setPosition(0, -0.13, 0);
 
 	while(!display.isClosed())
 	{
-		donut.setRotation(getTime() * 7.0, getTime() * 0.4, getTime() * 9.0);
+		catInstance.setRotation(0.0, getTime() * 1.8f, 0.0);
 
 		display.update();
 	}
