@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	if(argc > 1)
 		flags |= DISPLAY_DEBUG_MODE;
 
-	Display display("Window", 1024, 720, flags);
+	Display display("Object Viewer", 1024, 720, flags);
 
 	Mesh catMesh("assets/cat/concrete_cat_statue_2k.obj", MeshShade::SMOOTH);
 	std::cout << "Donut has this many vertices: " << 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
 	Camera::setPosition(0, 0, 0.4);
 
-	catInstance.setPosition(0, -0.13, 0);
+	catInstance.setPosition(-0.02, -0.13, 0);
 
 	while(!display.isClosed())
 	{
