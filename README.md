@@ -4,6 +4,8 @@ A library that provides a few convenient object-oriented wrappers over OpenGL ca
 Asset loading is supported through `assimp` and `stbimage`.
 Only diffuse textures are supported.
 
+![Screenshot of the example program built with glframe](https://github.com/bubba2k/glframe/blob/master/screenshot.png?raw=true)
+
 ## Building (Linux)
 
 Prerequisites: Have `GLEW`, `SDL2` and `assimp` libraries installed and on path.
