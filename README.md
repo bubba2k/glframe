@@ -8,7 +8,7 @@ This project provides a few convenient object-oriented wrappers over OpenGL call
 - Convenient abstractions to quickly load and display 3D models
 - Realtime affine transformations on models
 - Freely placable and modifiable camera
-- Support for wide variety of 3D model formats through [https://github.com/assimp/assimp](Open Asset Import Library)
+- Support for wide variety of 3D model formats through [Open Asset Import Library](https://github.com/assimp/assimp)
 - UV mapping of diffuse textures  
 
 ## Building (Linux)
